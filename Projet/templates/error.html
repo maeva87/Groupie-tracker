@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Erreur {{.Code}} - Groupie Tracker</title>
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .error-message {
+            font-size: 2rem;
+            color: #333;
+            margin: 1rem 0;
+        }
+        
+        .error-details {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        
+        .error-home-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        .error-home-link:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">
+            {{if eq .Code 404}}🔍{{else if eq .Code 400}}⚠️{{else if eq .Code 405}}🚫{{else if eq .Code 500}}💥{{else}}❌{{end}}
+        </div>
+        <h1 class="error-code">{{.Code}}</h1>
+        <h2 class="error-message">{{.Message}}</h2>
+        <p class="error-details">{{.Details}}</p>
+        <a href="/" class="error-home-link">← Retour à l'accueil</a>
+    </div>
+</body>
+</html>
