@@ -1,18 +1,31 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.6;
-    margin: 40px;
-    background: rgba(249, 245, 245, 0.238)
+    margin: 30px;
+    background: rgba(0, 0, 0, 0.696)
+}
+header
+{
+    background: #333333;
+    color: #ffffff;
+    padding: 40px 0;
+    text-align: center;
+    margin-bottom: 20px;
+    margin: -30px -30px 20px -30px;
 }
 h1 {
     text-align: center;
+    color: #f9f6f6;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+h2 {
     color: #ffffff;
-    background-color: #f0f2f4;
-    border: 1px sol whitesmoke;
 }
 
 p {
-    color: #ecf0f1;
+    color: #ffffff;
 }
 
 title {
@@ -20,20 +33,21 @@ title {
     font-weight: bold;
 }
 .cards {
-    max-width: 700px;
-    margin: 1em auto;
+    max-width: 1500px;
+    margin: 1em 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     grid-gap: 10px;
 }
 
 .card {
     border: 1px solid #99999956;
     border-radius: 3px;
-    font-size: 25px;
+    font-size: 15px;
+    background-color: #0e0e0fdc;
     border-radius: 10px;
-    box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.5);
-    padding: 100px;
+    box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.358);
+    padding: 30px;
     display: grid;
     grid-template-rows: max-content 200px 1fr;
 }
@@ -55,6 +69,28 @@ title {
 
 .card footer {
     background-color: #333333;
-    color: white;
+    color: rgb(16, 15, 15);
     padding: 0.5rem;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #555555;
 }
