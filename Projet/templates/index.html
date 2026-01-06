@@ -1,10 +1,38 @@
 <!DOCTYPE html>
+
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Groupie</title>
     </head>
     <body>
-        <meta name="viewport" content="width=devices-width, initial-scale=1">
+    <input type="text" id="searchBar" list="suggestions" placeholder="Rechercher un artiste, un membre...">
+    <datalist id="suggestions">
+    </datalist>
     </body>
+<script>
+    let searchData = [
+    {{range ,}}
+        { name: "{{.Name}}", type: "artist" }{{range .Members}},
+        { name: "{{.}}", type: "member" }{{end}}{{end}}
+    ];
+    const input = document.getElementById('searchBar');
+    const list = document.getElementById('suggestions');
+
+    input.addEventListener('input', () => {
+        const val = input.value.toLowerCase();
+        list.innerHTML = '';
+        if (val.length < 1) return;
+
+        searchData.forEach(item => {
+            if (item.name.toLowerCase().includes(val)) {
+                let option = document.createElement('option');
+                option.value = item.name;
+                option.label = item.type;
+                list.appendChild(option);
+            }
+        });
+    });
+</script>
 </html>
