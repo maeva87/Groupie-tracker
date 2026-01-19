@@ -1,38 +1,44 @@
 <!DOCTYPE html>
-
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Groupie</title>
-    </head>
-    <body>
-    <input type="text" id="searchBar" list="suggestions" placeholder="Rechercher un artiste, un membre...">
-    <datalist id="suggestions">
-    </datalist>
-    </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groupie Tracker - Search</title>
+</head>
+<body>
+<h1>Groupie Tracker</h1>
+<input type="text" id="searchBar" list="suggestions" placeholder="Rechercher un artiste, un membre...">
+<datalist id="suggestions"></datalist>
 <script>
-    let searchData = [
-    {{range ,}}
-        { name: "{{.Name}}", type: "artist" }{{range .Members}},
-        { name: "{{.}}", type: "member" }{{end}}{{end}}
-    ];
-    const input = document.getElementById('searchBar');
-    const list = document.getElementById('suggestions');
+const input = document.getElementById('searchBar');
+const list = document.getElementById('suggestions');
 
-    input.addEventListener('input', () => {
-        const val = input.value.toLowerCase();
+input.addEventListener('input', () => {
+    const query = input.value;
+    if (query.length < 1) {
         list.innerHTML = '';
-        if (val.length < 1) return;
-
-        searchData.forEach(item => {
-            if (item.name.toLowerCase().includes(val)) {
-                let option = document.createElement('option');
-                option.value = item.name;
-                option.label = item.type;
-                list.appendChild(option);
-            }
+        return;
+    }
+    fetch(`/api/artists?search=${query}`)
+        .then(response => response.json())
+        .then(artists => {
+            list.innerHTML = '';
+            artists.forEach(artist => {
+                let optGroup = document.createElement('option');
+                optGroup.value = artist.name;
+                optGroup.label = "artist/band";
+                list.appendChild(optGroup);
+                artist.members.forEach(member => {
+                    if (member.toLowerCase().includes(query.toLowerCase())) {
+                        let optMem = document.createElement('option');
+                        optMem.value = member;
+                        optMem.label = "member";
+                        list.appendChild(optMem);
+                    }
+                });
+            });
         });
-    });
+});
 </script>
+</body>
 </html>
