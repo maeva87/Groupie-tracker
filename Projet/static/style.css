@@ -53,7 +53,7 @@ body::after {
     50% {
         opacity: 1;
     }
-    100% { 
+    100% {
         transform: translateY(-100px) rotate(5deg);
         opacity: 0.6;
     }
