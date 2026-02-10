@@ -1,142 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/static/style.css" />
-        <link rel="shortcut icon" href="/image/logo.jpg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>User Friendly</title>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="/">Accueil</a></li>
-                    <li><a href="/recherche">Recherche</a></li>
-                    <li><a href="/about.html">À propos</a></li>
-                    <li><a href="/contact.html">Contact</a></li>
-                </ul>
-            </nav>
-        <h1>Bienvenue sur User Friendly</h1>    
-        </header>
-        <div class="cards" id="artists-container">
-            <article class="card" id="artist-kendrick" data-artist="Kendrick Lamar" data-genre="hip-hop rap" data-country="usa">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Friendly</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/recherche">Recherche</a></li>
+                <li><a href="/about.html">À propos</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <h1>Bienvenue sur User Friendly</h1>
+    </header>
+
+    <div class="cards">
+        {{range .Artists}}
+        <a href="/artist?id={{.ID}}" style="text-decoration: none;">
+            <article class="card">
                 <header>
-                    <h2>Kendrick Lamar</h2>
+                    <h2>{{.Name}}</h2>
                 </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5eb437b9e2a82505b3d93ff1022"
-                    alt="Kendrick Lamar" />
+                <img src="{{.Image}}" alt="{{.Name}}" />
                 <div class="content">
                     <p>
-                        Kendrick Lamar est un rappeur et auteur-compositeur américain acclamé pour ses contributions innovantes à la musique hip-hop et ses paroles profondes.
+                        <strong>Fondation:</strong> {{.CreationDate}}<br>
+                        <strong>Premier album:</strong> {{.FirstAlbum}}<br>
+                        <strong>Membres:</strong> {{len .Members}}
                     </p>
                 </div>
             </article>
-            <article class="card" id="artist-billie" data-artist="Billie Eilish" data-genre="pop alternative" data-country="usa">
-                <header>
-                    <h2>Billie Eilish</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5ebd8b9980db67272cb4d2c3daf"
-                    alt="Billie Eilish" />
-                <div class="content">
-                    <p>
-                        Billie Eilish est une chanteuse et auteure-compositrice américaine célèbre pour son style musical unique et son influence dans la culture pop contemporaine.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-weeknd" data-artist="The Weeknd" data-genre="rnb pop" data-country="canada">
-                <header>
-                    <h2>The Weeknd</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5eb214f3cf1cbe7139c1e26ffbb"
-                    alt="The Weeknd" />
-                <div class="content">
-                    <p>
-                        The Weeknd est un chanteur et producteur canadien reconnu pour ses productions musicales sophistiquées et ses collaborations majeures dans l'industrie musicale.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-taylor" data-artist="Taylor Swift" data-genre="pop country" data-country="usa">
-                <header>
-                    <h2>Taylor Swift</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5ebe672b5f553298dcdccb0e676"
-                    alt="Taylor Swift" />
-                <div class="content">
-                    <p>
-                        Taylor Swift est une auteure-compositrice-interprète américaine réputée pour sa capacité à conter des histoires et à réinventer son style musical à travers ses albums.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-drake" data-artist="Drake" data-genre="hip-hop rap rnb" data-country="canada">
-                <header>
-                    <h2>Drake</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5eb4293385d324db8558179afd9"
-                    alt="Drake" />
-                <div class="content">
-                    <p>
-                        Drake est un rappeur, chanteur et producteur canadien qui a dominé les charts musicaux mondiaux avec ses mélodies accrochantes et ses collaborations strategiques.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-ariana" data-artist="Ariana Grande" data-genre="pop rnb" data-country="usa">
-                <header>
-                    <h2>Ariana Grande</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5ebcdce7620dc940db079bf4952"
-                    alt="Ariana Grande" />
-                <div class="content">
-                    <p>
-                        Ariana Grande est une chanteuse et actrice américaine connue pour son étendue vocale impressionnante et ses titres pop à succès mondial.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-post" data-artist="Post Malone" data-genre="hip-hop pop rock" data-country="usa">
-                <header>
-                    <h2>Post Malone</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5ebe17c0aa1714a03d62b5ce4e0"
-                    alt="Post Malone" />
-                <div class="content">
-                    <p>
-                        Post Malone est un rappeur et chanteur américain connu pour son style éclectique mêlant hip-hop, rock et pop avec des mélodies accrocheuses.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-dua" data-artist="Dua Lipa" data-genre="pop dance" data-country="uk">
-                <header>
-                    <h2>Dua Lipa</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5ebd42a27db3286b58553da8858"
-                    alt="Dua Lipa" />
-                <div class="content">
-                    <p>
-                        Dua Lipa est une chanteuse britannique-kosovare qui a conquis les charts avec ses morceaux pop énergiques et sa présence scénique captivante.
-                    </p>
-                </div>
-            </article>
-            <article class="card" id="artist-freeze" data-artist="Freeze Corleone" data-genre="rap trap" data-country="france">
-                <header>
-                    <h2>Freeze Corleone</h2>
-                </header>
-                <img
-                    src="https://i.scdn.co/image/ab6761610000e5ebcbc9cc45e24377c8ca8344e4"
-                    alt="Freeze Corleone" />
-                <div class="content">
-                    <p>
-                        Freeze Corleone est un rappeur français connu pour son style trap sombre, ses références cinématographiques et son impact majeur sur la scène rap francophone.
-                    </p>
-                </div>
-            </article>
-        </div>    
-    </body>
+        </a>
+        {{end}}
+    </div>
+</body>
 </html>

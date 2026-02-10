@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -202,6 +203,7 @@ func main() {
 	http.Handle("/image/", fileServer("./image", "/image/"))
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/artist", artistHandler)
+	http.HandleFunc("/api/search", searchHandler)
 
 	server := &http.Server{
 		Addr:         ":8080",
@@ -228,7 +230,7 @@ func main() {
 	})
 
 	http.HandleFunc("/recherche", func(w http.ResponseWriter, r *http.Request) {
-		tmpl, err := template.ParseFiles("./templates/index.html")
+		tmpl, err := template.ParseFiles("./templates/search.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -238,4 +240,37 @@ func main() {
 
 	fmt.Println("Serveur lancé sur http://localhost:8080")
 	log.Fatal(server.ListenAndServe())
+}
+
+func searchHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		showError(w, 405, "Méthode non autorisée")
+		return
+	}
+
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, "[]")
+		return
+	}
+
+	artists, err := getAllArtists()
+	if err != nil {
+		showError(w, 500, "Erreur serveur")
+		return
+	}
+	// Filtrer les artistes par nom
+	var filteredArtists []ArtistComplete
+	for _, artist := range artists {
+		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
+			filteredArtists = append(filteredArtists, artist)
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if filteredArtists == nil {
+		filteredArtists = []ArtistComplete{}
+	}
+	json.NewEncoder(w).Encode(filteredArtists)
 }
