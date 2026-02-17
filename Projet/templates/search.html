@@ -103,59 +103,309 @@
         <div class="search-box">
             <h2>🔍 Rechercher un artiste</h2>
             <div class="search-input-group">
-                <input type="text" id="searchInput" placeholder="Entrez le nom d'un artiste...">
+                <input type="text" id="searchInput" placeholder="Entrez le nom d'un artiste..." autocomplete="off">
                 <button id="searchBtn">Rechercher</button>
             </div>
+
+            <!-- Suggestions en temps réel -->
+            <div id="suggestions" class="suggestions-dropdown" style="display: none;">
+                <ul id="suggestionsList"></ul>
+            </div>
+
+            <!-- Section des filtres -->
+            <div class="filters-section" id="filtersSection" style="display: none;">
+                <h3>Filtres avancés</h3>
+                <div class="filter-group">
+                    <label>
+                        <input type="radio" name="searchType" value="" checked> Tous les champs
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="name"> Nom d'artiste
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="members"> Nom de membre
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="album"> Album
+                    </label>
+                </div>
+
+                <div class="filter-group">
+                    <label>Nombre de membres:</label>
+                    <div class="member-filter">
+                        <input type="number" id="minMembers" placeholder="Min" min="0" max="20">
+                        <span>à</span>
+                        <input type="number" id="maxMembers" placeholder="Max" min="0" max="20">
+                    </div>
+                </div>
+
+                <button id="applyFiltersBtn">Appliquer les filtres</button>
+            </div>
+
+            <!-- Bouton pour afficher/masquer les filtres -->
+            <button id="toggleFiltersBtn" class="toggle-filters-btn">Afficher les filtres</button>
         </div>
 
+        <div id="resultsInfo" class="results-info" style="display: none;"></div>
         <div class="cards" id="results"></div>
     </div>
 
+    <style>
+        .suggestions-dropdown {
+            position: absolute;
+            background: var(--color-surface);
+            border: 2px solid var(--color-accent);
+            border-radius: 8px;
+            max-width: 400px;
+            margin-top: -10px;
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .suggestions-dropdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-dropdown li {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 73, 53, 0.2);
+            transition: background 0.2s;
+        }
+
+        .suggestions-dropdown li:hover {
+            background: rgba(255, 73, 53, 0.2);
+        }
+
+        .filters-section {
+            background: rgba(255, 73, 53, 0.1);
+            border: 1px solid var(--color-accent);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .filters-section h3 {
+            margin-bottom: 15px;
+            color: var(--color-accent);
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+            color: var(--color-text);
+        }
+
+        .filter-group input[type="radio"],
+        .filter-group input[type="number"] {
+            margin-right: 8px;
+        }
+
+        .member-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .member-filter input {
+            width: 80px;
+            padding: 8px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-accent);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .toggle-filters-btn {
+            background: rgba(255, 73, 53, 0.2);
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent);
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-filters-btn:hover {
+            background: rgba(255, 73, 53, 0.3);
+        }
+
+        #applyFiltersBtn {
+            background: var(--color-accent);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        #applyFiltersBtn:hover {
+            background: #f7461e;
+            transform: translateY(-2px);
+        }
+
+        .results-info {
+            text-align: center;
+            color: var(--color-text-muted);
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+
     <script>
-        document.getElementById('searchBtn').addEventListener('click', function() {
-            const query = document.getElementById('searchInput').value;
-            if (query.trim()) {
-                fetch('/api/search?q=' + encodeURIComponent(query))
-                    .then(response => response.json())
-                    .then(data => {
-                        const container = document.getElementById('results');
-                        container.innerHTML = '';
-                        if (data && data.length > 0) {
-                            data.forEach(artist => {
-                                const card = document.createElement('a');
-                                card.href = '/artist?id=' + artist.ID;
-                                card.style.textDecoration = 'none';
-                                card.innerHTML = `
-                                    <article class="card">
-                                        <header><h2>${artist.Name}</h2></header>
-                                        <img src="${artist.Image}" alt="${artist.Name}" />
-                                        <div class="content">
-                                            <p>
-                                                <strong>Fondation:</strong> ${artist.CreationDate}<br>
-                                                <strong>Premier album:</strong> ${artist.FirstAlbum}<br>
-                                                <strong>Membres:</strong> ${artist.Members.length}
-                                            </p>
-                                        </div>
-                                    </article>
-                                `;
-                                container.appendChild(card);
-                            });
-                        } else {
-                            container.innerHTML = '<p>Aucun artiste trouvé pour "' + query + '"</p>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur:', error);
-                        document.getElementById('results').innerHTML = '<p>Une erreur est survenue</p>';
-                    });
+        let searchTimeout;
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        const initialQuery = '{{.Query}}';
+
+        // Afficher/masquer les filtres
+        document.getElementById('toggleFiltersBtn').addEventListener('click', function() {
+            const filters = document.getElementById('filtersSection');
+            const isVisible = filters.style.display !== 'none';
+            filters.style.display = isVisible ? 'none' : 'block';
+            this.textContent = isVisible ? 'Afficher les filtres' : 'Masquer les filtres';
+        });
+
+        // Recherche en temps réel avec suggestions
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+
+            if (query.length > 0) {
+                searchTimeout = setTimeout(() => {
+                    fetch('/api/search?q=' + encodeURIComponent(query))
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.length > 0) {
+                                const suggestions = document.getElementById('suggestionsList');
+                                suggestions.innerHTML = '';
+                                data.slice(0, 5).forEach(artist => {
+                                    const li = document.createElement('li');
+                                    li.textContent = artist.Name;
+                                    li.addEventListener('click', () => {
+                                        document.getElementById('searchInput').value = artist.Name;
+                                        document.getElementById('suggestionsList').innerHTML = '';
+                                        document.getElementById('suggestions').style.display = 'none';
+                                        performSearch(artist.Name);
+                                    });
+                                    suggestions.appendChild(li);
+                                });
+                                document.getElementById('suggestions').style.display = 'block';
+                            } else {
+                                document.getElementById('suggestions').style.display = 'none';
+                            }
+                        });
+                }, 300);
+            } else {
+                document.getElementById('suggestions').style.display = 'none';
             }
         });
 
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('searchBtn').click();
+        // Cacher les suggestions en cliquant ailleurs
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== 'searchInput') {
+                document.getElementById('suggestions').style.display = 'none';
             }
         });
+
+        // Fonction de recherche
+        function performSearch(query = null) {
+            const q = query || document.getElementById('searchInput').value;
+            if (!q.trim()) return;
+
+            // Ajouter à l'historique
+            if (!searchHistory.includes(q)) {
+                searchHistory.unshift(q);
+                if (searchHistory.length > 10) searchHistory.pop();
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
+
+            let url = '/api/search?q=' + encodeURIComponent(q);
+
+            const searchType = document.querySelector('input[name="searchType"]:checked').value;
+            if (searchType) url += '&type=' + searchType;
+
+            const minMembers = document.getElementById('minMembers').value;
+            if (minMembers) url += '&minMembers=' + minMembers;
+
+            const maxMembers = document.getElementById('maxMembers').value;
+            if (maxMembers) url += '&maxMembers=' + maxMembers;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('results');
+                    const info = document.getElementById('resultsInfo');
+                    container.innerHTML = '';
+
+                    if (data && data.length > 0) {
+                        info.style.display = 'block';
+                        info.innerHTML = `<p>${data.length} résultat(s) trouvé(s) pour "${q}"</p>`;
+
+                        data.forEach(artist => {
+                            const card = document.createElement('a');
+                            card.href = '/artist?id=' + artist.ID;
+                            card.style.textDecoration = 'none';
+                            card.innerHTML = `
+                                <article class="card">
+                                    <header><h2>${artist.Name}</h2></header>
+                                    <img src="${artist.Image}" alt="${artist.Name}" />
+                                    <div class="content">
+                                        <p>
+                                            <strong>Fondation:</strong> ${artist.CreationDate}<br>
+                                            <strong>Premier album:</strong> ${artist.FirstAlbum}<br>
+                                            <strong>Membres:</strong> ${artist.Members.length}
+                                        </p>
+                                    </div>
+                                </article>
+                            `;
+                            container.appendChild(card);
+                        });
+                    } else {
+                        info.style.display = 'block';
+                        info.innerHTML = `<p>Aucun artiste trouvé pour "${q}"</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    document.getElementById('results').innerHTML = '<p>Une erreur est survenue lors de la recherche</p>';
+                });
+        }
+
+        // Bouton rechercher
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            performSearch();
+        });
+
+        // Entrée pour la recherche
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Appliquer les filtres
+        document.getElementById('applyFiltersBtn').addEventListener('click', function() {
+            performSearch();
+        });
+
+        // Exécuter la recherche initiale si une requête est fournie
+        if (initialQuery) {
+            document.getElementById('searchInput').value = initialQuery;
+            performSearch(initialQuery);
+        }
     </script>
 </body>
 </html>

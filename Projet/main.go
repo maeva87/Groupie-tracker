@@ -235,7 +235,11 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		tmpl.Execute(w, nil)
+		// Pass initial query if provided
+		data := map[string]string{
+			"Query": r.URL.Query().Get("q"),
+		}
+		tmpl.Execute(w, data)
 	})
 
 	fmt.Println("Serveur lancé sur http://localhost:8080")
@@ -249,6 +253,10 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.URL.Query().Get("q")
+	filterType := r.URL.Query().Get("type") // "name", "members", "album"
+	minMembers := r.URL.Query().Get("minMembers")
+	maxMembers := r.URL.Query().Get("maxMembers")
+
 	if query == "" {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, "[]")
@@ -260,10 +268,55 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		showError(w, 500, "Erreur serveur")
 		return
 	}
-	// Filtrer les artistes par nom
+
+	// Parse member filters
+	var minM, maxM int
+	fmt.Sscanf(minMembers, "%d", &minM)
+	fmt.Sscanf(maxMembers, "%d", &maxM)
+	if maxM == 0 {
+		maxM = 1000
+	}
+
+	// Filtrer les artistes
 	var filteredArtists []ArtistComplete
+	queryLower := strings.ToLower(query)
+
 	for _, artist := range artists {
-		if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(query)) {
+		matches := false
+
+		// Recherche par nom
+		if filterType == "" || filterType == "name" {
+			if strings.Contains(strings.ToLower(artist.Name), queryLower) {
+				matches = true
+			}
+		}
+
+		// Recherche par membre
+		if filterType == "" || filterType == "members" {
+			for _, member := range artist.Members {
+				if strings.Contains(strings.ToLower(member), queryLower) {
+					matches = true
+					break
+				}
+			}
+		}
+
+		// Recherche par album
+		if filterType == "" || filterType == "album" {
+			if strings.Contains(strings.ToLower(artist.FirstAlbum), queryLower) {
+				matches = true
+			}
+		}
+
+		// Appliquer le filtre de nombre de membres
+		if matches && (minM > 0 || maxM < 1000) {
+			memberCount := len(artist.Members)
+			if memberCount < minM || memberCount > maxM {
+				matches = false
+			}
+		}
+
+		if matches {
 			filteredArtists = append(filteredArtists, artist)
 		}
 	}
