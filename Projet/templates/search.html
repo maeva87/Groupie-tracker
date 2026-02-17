@@ -293,12 +293,12 @@
                                 suggestions.innerHTML = '';
                                 data.slice(0, 5).forEach(artist => {
                                     const li = document.createElement('li');
-                                    li.textContent = artist.Name;
+                                    li.textContent = artist.name;
                                     li.addEventListener('click', () => {
-                                        document.getElementById('searchInput').value = artist.Name;
+                                        document.getElementById('searchInput').value = artist.name;
                                         document.getElementById('suggestionsList').innerHTML = '';
                                         document.getElementById('suggestions').style.display = 'none';
-                                        performSearch(artist.Name);
+                                        performSearch(artist.name);
                                     });
                                     suggestions.appendChild(li);
                                 });
@@ -350,23 +350,25 @@
                     const info = document.getElementById('resultsInfo');
                     container.innerHTML = '';
 
+                    console.log('Données reçues:', data);
+
                     if (data && data.length > 0) {
                         info.style.display = 'block';
                         info.innerHTML = `<p>${data.length} résultat(s) trouvé(s) pour "${q}"</p>`;
 
                         data.forEach(artist => {
                             const card = document.createElement('a');
-                            card.href = '/artist?id=' + artist.ID;
+                            card.href = '/artist?id=' + artist.id;
                             card.style.textDecoration = 'none';
                             card.innerHTML = `
                                 <article class="card">
-                                    <header><h2>${artist.Name}</h2></header>
-                                    <img src="${artist.Image}" alt="${artist.Name}" />
+                                    <header><h2>${artist.name}</h2></header>
+                                    <img src="${artist.image}" alt="${artist.name}" />
                                     <div class="content">
                                         <p>
-                                            <strong>Fondation:</strong> ${artist.CreationDate}<br>
-                                            <strong>Premier album:</strong> ${artist.FirstAlbum}<br>
-                                            <strong>Membres:</strong> ${artist.Members.length}
+                                            <strong>Fondation:</strong> ${artist.creationDate}<br>
+                                            <strong>Premier album:</strong> ${artist.firstAlbum}<br>
+                                            <strong>Membres:</strong> ${artist.members.length}
                                         </p>
                                     </div>
                                 </article>

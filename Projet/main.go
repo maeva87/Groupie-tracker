@@ -284,27 +284,42 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	for _, artist := range artists {
 		matches := false
 
-		// Recherche par nom
-		if filterType == "" || filterType == "name" {
+		// Si un type est spécifié, chercher uniquement dans ce type
+		if filterType != "" {
+			if filterType == "name" {
+				matches = strings.Contains(strings.ToLower(artist.Name), queryLower)
+			} else if filterType == "members" {
+				for _, member := range artist.Members {
+					if strings.Contains(strings.ToLower(member), queryLower) {
+						matches = true
+						break
+					}
+				}
+			} else if filterType == "album" {
+				matches = strings.Contains(strings.ToLower(artist.FirstAlbum), queryLower)
+			}
+		} else {
+			// Si aucun type n'est spécifié, chercher dans tous les champs
+			// Recherche par nom
 			if strings.Contains(strings.ToLower(artist.Name), queryLower) {
 				matches = true
 			}
-		}
 
-		// Recherche par membre
-		if filterType == "" || filterType == "members" {
-			for _, member := range artist.Members {
-				if strings.Contains(strings.ToLower(member), queryLower) {
-					matches = true
-					break
+			// Recherche par membre
+			if !matches {
+				for _, member := range artist.Members {
+					if strings.Contains(strings.ToLower(member), queryLower) {
+						matches = true
+						break
+					}
 				}
 			}
-		}
 
-		// Recherche par album
-		if filterType == "" || filterType == "album" {
-			if strings.Contains(strings.ToLower(artist.FirstAlbum), queryLower) {
-				matches = true
+			// Recherche par album
+			if !matches {
+				if strings.Contains(strings.ToLower(artist.FirstAlbum), queryLower) {
+					matches = true
+				}
 			}
 		}
 

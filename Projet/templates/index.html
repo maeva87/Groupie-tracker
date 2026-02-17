@@ -5,92 +5,6 @@
     <link rel="stylesheet" href="/static/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Friendly</title>
-    <style>
-        .home-search-bar {
-            background: linear-gradient(135deg, rgba(255, 73, 53, 0.1) 0%, rgba(255, 73, 53, 0.05) 100%);
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 2px dashed var(--color-accent);
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .home-search-bar h3 {
-            color: var(--color-accent);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .home-search-group {
-            display: flex;
-            gap: 10px;
-            max-width: 600px;
-            margin: 1rem auto;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .home-search-group input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 15px;
-            font-size: 14px;
-            border: 2px solid var(--color-accent);
-            border-radius: 6px;
-            background: var(--color-surface);
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .home-search-group input:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(255, 73, 53, 0.4);
-        }
-
-        .home-search-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .home-search-group button {
-            padding: 12px 25px;
-            background: var(--color-accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .home-search-group button:hover {
-            background: #f7461e;
-            transform: translateY(-2px);
-        }
-
-        .quick-filters {
-            margin-top: 1rem;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .quick-filter-btn {
-            padding: 8px 15px;
-            background: rgba(255, 73, 53, 0.2);
-            border: 1px solid var(--color-accent);
-            color: var(--color-accent);
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .quick-filter-btn:hover {
-            background: rgba(255, 73, 53, 0.4);
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -104,20 +18,6 @@
         </nav>
         <h1>Bienvenue sur User Friendly</h1>
     </header>
-
-    <div class="home-search-bar">
-        <h3>🎤 Rechercher un artiste rapidement</h3>
-        <div class="home-search-group">
-            <input type="text" id="homeSearchInput" placeholder="Entrez un nom d'artiste, un membre ou un album...">
-            <button id="homeSearchBtn">Chercher</button>
-        </div>
-        <div class="quick-filters">
-            <button class="quick-filter-btn" onclick="quickSearch('rock')">Rock</button>
-            <button class="quick-filter-btn" onclick="quickSearch('metal')">Metal</button>
-            <button class="quick-filter-btn" onclick="quickSearch('pop')">Pop</button>
-            <button class="quick-filter-btn" onclick="quickSearch('indie')">Indie</button>
-        </div>
-    </div>
 
     <div class="cards">
         {{range .Artists}}
@@ -138,26 +38,5 @@
         </a>
         {{end}}
     </div>
-
-    <script>
-        function performHomeSearch() {
-            const query = document.getElementById('homeSearchInput').value;
-            if (query.trim()) {
-                window.location.href = '/recherche?q=' + encodeURIComponent(query);
-            }
-        }
-
-        function quickSearch(term) {
-            window.location.href = '/recherche?q=' + encodeURIComponent(term);
-        }
-
-        document.getElementById('homeSearchBtn').addEventListener('click', performHomeSearch);
-
-        document.getElementById('homeSearchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performHomeSearch();
-            }
-        });
-    </script>
 </body>
 </html>
