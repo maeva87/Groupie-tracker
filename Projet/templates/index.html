@@ -1,43 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/static/style.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>User Friendly</title>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Friendly</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/recherche">Recherche</a></li>
+                <li><a href="/about.html">À propos</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </nav>
         <h1>Bienvenue sur User Friendly</h1>
-        <p>Ceci est la page d'accueil de notre application web.</p>
-        
-        <div class="cards">
-            <article class="card">
-                <header>
-                    <h2>Odetari</h2>
-                </header>
-                <img
-                    src="/image/Odetari.jpg"
-                    alt="Odetari" />
-                <div class="content">
-                    <p>
-                        Chanteur et compositeur français, Odetari est connu pour son style unique mêlant musique urbaine et influences électroniques.
-                    </p>
-                </div>
-            </article>
+    </header>
 
+    <div class="cards">
+        {{range .Artists}}
+        <a href="/artist?id={{.ID}}" style="text-decoration: none;">
             <article class="card">
                 <header>
-                    <h2>Freeze Corleone</h2>
+                    <h2>{{.Name}}</h2>
                 </header>
-                <img
-                    src="/image/Freeze.jpg"
-                    alt="Freeze Corleone" />
+                <img src="{{.Image}}" alt="{{.Name}}" />
                 <div class="content">
                     <p>
-                        Freeze Corleone est un rappeur français reconnu pour ses paroles percutantes et son style distinctif dans le paysage du rap français.
+                        <strong>Fondation:</strong> {{.CreationDate}}<br>
+                        <strong>Premier album:</strong> {{.FirstAlbum}}<br>
+                        <strong>Membres:</strong> {{len .Members}}
                     </p>
                 </div>
             </article>
-        </div>
-    </body>
+        </a>
+        {{end}}
+    </div>
+</body>
 </html>
