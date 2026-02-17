@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{.Artist.Name}} - Groupie Tracker</title>
+    <style>
+        .artist-detail {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .artist-header {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .artist-image {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .artist-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .artist-name {
+            font-size: 2.5rem;
+            margin: 0 0 1rem 0;
+            color: #333;
+        }
+
+        .info-item {
+            margin: 0.8rem 0;
+            font-size: 1.1rem;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .members-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+        }
+
+        .members-list li {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .concerts-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #eee;
+        }
+
+        .concerts-section h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .concert-location {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .location-name {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dates-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .dates-list li {
+            background: #3498db;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .no-concerts {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="artist-detail">
+        <a href="/" class="back-link">← Retour à la liste</a>
+        
+        {{if .Artist}}
+        <div class="artist-header">
+            <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}" class="artist-image">
+            <div class="artist-info">
+                <h1 class="artist-name">{{.Artist.Name}}</h1>
+                
+                <div class="info-item">
+                    <span class="info-label">📅 Création :</span> {{.Artist.CreationDate}}
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">💿 Premier album :</span> {{.Artist.FirstAlbum}}
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">👥 Membres :</span>
+                    <ul class="members-list">
+                        {{range .Artist.Members}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="concerts-section">
+            <h2>🎤 Concerts</h2>
+            {{if .Artist.DatesLocations}}
+                {{range $location, $dates := .Artist.DatesLocations}}
+                <div class="concert-location">
+                    <div class="location-name">📍 {{$location}}</div>
+                    <ul class="dates-list">
+                        {{range $dates}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+                {{end}}
+            {{else}}
+                <p class="no-concerts">Aucun concert prévu pour le moment.</p>
+            {{end}}
+        </div>
+        {{else}}
+        <p>Artiste non trouvé.</p>
+        {{end}}
+    </div>
+</body>
+</html>
